@@ -1,32 +1,11 @@
 import React from "react";
+import { useLeagueActions } from "../hooks";
 import { useLeague } from "../context/LeagueContext";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { playNextWeek } from "../services/leagueApi";
 
 const MatchResults: React.FC = () => {
-  const { state, dispatch } = useLeague();
+  const { state } = useLeague();
   const { currentWeek, weekResults, loadingResults, totalWeeks } = state;
-  const queryClient = useQueryClient();
-
-  // Mutation for playing next week
-  const playNextMutation = useMutation({
-    mutationFn: () => playNextWeek(currentWeek + 1),
-    onSuccess: () => {
-      const nextWeek = currentWeek + 1;
-      dispatch({ type: "SET_CURRENT_WEEK", payload: nextWeek });
-
-      // Invalidate queries for the new week
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["leagueTable"] });
-        queryClient.invalidateQueries({
-          queryKey: ["weekResults", nextWeek],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["weekPredictions", nextWeek],
-        });
-      }, 0);
-    },
-  });
+  const { playNext, playNextMutation } = useLeagueActions();
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 min-w-[260px] flex-1">
@@ -74,7 +53,7 @@ const MatchResults: React.FC = () => {
         {totalWeeks && currentWeek < totalWeeks ? (
           <button
             className="bg-gray-300 dark:bg-gray-700 px-4 py-1 rounded disabled:opacity-50"
-            onClick={() => playNextMutation.mutate()}
+            onClick={() => playNext()}
             disabled={playNextMutation.isPending}
           >
             {currentWeek === 0 ? "Start League" : "Next Week"}

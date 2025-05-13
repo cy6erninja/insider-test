@@ -1,33 +1,11 @@
 import React from "react";
+import { useLeagueActions } from "../hooks";
 import { useLeague } from "../context/LeagueContext";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { playAllWeeks, resetLeague } from "../services/leagueApi";
 
 const LeagueTable: React.FC = () => {
   const { state } = useLeague();
   const { leagueTable, loadingTable } = state;
-  const queryClient = useQueryClient();
-
-  // Mutations
-  const playAllMutation = useMutation({
-    mutationFn: playAllWeeks,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["leagueTable"], exact: true });
-      queryClient.invalidateQueries({ queryKey: ["weekResults"] });
-      queryClient.invalidateQueries({ queryKey: ["weekPredictions"] });
-      queryClient.invalidateQueries({ queryKey: ["totalWeeks"] });
-    },
-  });
-
-  const resetMutation = useMutation({
-    mutationFn: resetLeague,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["leagueTable"], exact: true });
-      queryClient.invalidateQueries({ queryKey: ["weekResults"] });
-      queryClient.invalidateQueries({ queryKey: ["weekPredictions"] });
-      queryClient.invalidateQueries({ queryKey: ["totalWeeks"] });
-    },
-  });
+  const { playAll, reset, playAllMutation, resetMutation } = useLeagueActions();
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 min-w-[260px] flex-1">
@@ -65,14 +43,14 @@ const LeagueTable: React.FC = () => {
       <div className="flex gap-2 mt-4 justify-center">
         <button
           className="bg-blue-600 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={() => playAllMutation.mutate()}
+          onClick={() => playAll()}
           disabled={playAllMutation.isPending}
         >
           Play All
         </button>
         <button
           className="bg-red-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={() => resetMutation.mutate()}
+          onClick={() => reset()}
           disabled={resetMutation.isPending}
         >
           Reset

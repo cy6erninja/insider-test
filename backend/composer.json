@@ -1,0 +1,21 @@
+{
+    "name": "cy6erninja/backend",
+    "description": "PHP based API for Insider Champion League",
+    "type": "project",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "cy6erninja",
+            "email": "cy6erninja@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/routing": "^7.2",
+        "symfony/dependency-injection": "^7.2"
+    }
+}

@@ -59,6 +59,13 @@ The project is automatically deployed when changes are pushed to the `main` bran
 
 You can also manually trigger a deployment from the GitHub Actions tab.
 
+### Configuration
+
+- **Backend URL**: The frontend build uses the `BACKEND_URL` repository secret for API requests. If not set, it defaults to the DigitalOcean app URL. To change this:
+  1. Go to your repository's Settings
+  2. Select "Secrets and variables" → "Actions"
+  3. Add a new repository secret named `BACKEND_URL` with your backend endpoint
+
 ## Troubleshooting
 
 If you encounter case sensitivity issues with PSR-4 autoloading in the backend, the Dockerfile includes steps to fix directory casing during Docker builds.

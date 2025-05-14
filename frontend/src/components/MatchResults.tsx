@@ -3,25 +3,49 @@ import { useLeagueActions } from "../hooks";
 import { useLeague } from "../context/LeagueContext";
 
 const MatchResults: React.FC = () => {
-  const { state } = useLeague();
-  const { currentWeek, weekResults, loadingResults, totalWeeks } = state;
+  const {
+    state: { currentWeek, weekResults, loadingResults, totalWeeks },
+  } = useLeague();
   const { playNext, playNextMutation } = useLeagueActions();
 
-  return (
-    <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 min-w-[260px] flex-1">
-      <h2 className="font-bold text-lg mb-2 text-center">Match Results</h2>
-      <div className="text-center mb-2 font-semibold">
-        {currentWeek === 0
-          ? "The league has not been started yet"
-          : totalWeeks && currentWeek > totalWeeks
-            ? "The league has ended."
-            : `${currentWeek}ᵗʰ Week Match Result`}
-      </div>
-      {loadingResults ? (
-        <div>Loading...</div>
-      ) : currentWeek === 0 ? null : totalWeeks &&
-        currentWeek > totalWeeks ? null : weekResults?.data &&
-        weekResults.data.length > 0 ? (
+  // Check if we're on the last week or beyond
+  const isLastWeekOrBeyond =
+    totalWeeks !== undefined && currentWeek >= totalWeeks;
+
+  // Get the title based on current state
+  const getStateTitle = () => {
+    if (currentWeek === 0) {
+      return "The league has not been started yet";
+    } else if (isLastWeekOrBeyond) {
+      return "The league has ended.";
+    } else {
+      return `${currentWeek}ᵗʰ Week Match Result`;
+    }
+  };
+
+  // Render the match table or appropriate content
+  const renderMatchContent = () => {
+    // If league hasn't started
+    if (currentWeek === 0) {
+      return (
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-gray-500 italic">No matches to display</div>
+        </div>
+      );
+    }
+
+    // If loading
+    if (loadingResults) {
+      return (
+        <div className="flex justify-center items-center h-full">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      );
+    }
+
+    // If we have results
+    if (weekResults?.data && weekResults.data.length > 0) {
+      return (
         <table className="w-full text-sm table-fixed">
           <tbody>
             {weekResults.data.map((match) => (
@@ -44,13 +68,33 @@ const MatchResults: React.FC = () => {
             ))}
           </tbody>
         </table>
-      ) : (
-        <div className="text-center text-gray-500 py-4">
+      );
+    }
+
+    // Fallback for no results
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="text-center text-gray-500">
           No results for this week
         </div>
-      )}
-      <div className="flex justify-center mt-4">
-        {totalWeeks && currentWeek < totalWeeks ? (
+      </div>
+    );
+  };
+
+  // Show action button only in appropriate states
+  const showActionButton =
+    currentWeek === 0 || (currentWeek > 0 && !isLastWeekOrBeyond);
+
+  return (
+    <div
+      className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 min-w-[260px] flex-1 flex flex-col"
+      style={{ minHeight: "400px" }}
+    >
+      <h2 className="font-bold text-lg mb-2 text-center">Match Results</h2>
+      <div className="text-center mb-2 font-semibold">{getStateTitle()}</div>
+      <div className="flex-grow overflow-auto mb-4">{renderMatchContent()}</div>
+      {showActionButton && (
+        <div className="flex justify-center mt-auto">
           <button
             className="bg-gray-300 dark:bg-gray-700 px-4 py-1 rounded disabled:opacity-50"
             onClick={() => playNext()}
@@ -58,8 +102,8 @@ const MatchResults: React.FC = () => {
           >
             {currentWeek === 0 ? "Start League" : "Next Week"}
           </button>
-        ) : null}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLeague } from "../context/LeagueContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { fetchWeekPredictions } from "../services/leagueApi";
 
 const WinProbabilities: React.FC = () => {
   const { state } = useLeague();
-  const { predictions, loadingPredictions } = state;
+  const { predictions, loadingPredictions, currentWeek, totalWeeks } = state;
+  const queryClient = useQueryClient();
+
+  // Check if league has ended
+  const isLeagueEnded = totalWeeks !== undefined && currentWeek >= totalWeeks;
+
+  // Force refresh predictions when league ends
+  useEffect(() => {
+    if (isLeagueEnded) {
+      // Get the latest predictions after a short delay to ensure all other data is updated
+      const refreshPredictions = async () => {
+        try {
+          // Invalidate the prediction cache
+          queryClient.invalidateQueries({ queryKey: ["weekPredictions"] });
+
+          // Prefetch the latest predictions
+          await queryClient.prefetchQuery({
+            queryKey: ["weekPredictions", currentWeek],
+            queryFn: () => fetchWeekPredictions(currentWeek),
+          });
+        } catch (error) {
+          console.error("Failed to refresh predictions:", error);
+        }
+      };
+
+      // Add a small delay to ensure all data is updated first
+      const timer = setTimeout(refreshPredictions, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isLeagueEnded, currentWeek, queryClient]);
 
   return (
     <div
@@ -47,6 +78,20 @@ const WinProbabilities: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Add a manual refresh button when league has ended */}
+      {isLeagueEnded && (
+        <div className="mt-4 text-center">
+          <button
+            className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+            onClick={() =>
+              queryClient.invalidateQueries({ queryKey: ["weekPredictions"] })
+            }
+          >
+            Refresh probabilities
+          </button>
+        </div>
+      )}
     </div>
   );
 };

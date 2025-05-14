@@ -10,7 +10,7 @@ fe-dev port="3000" backend-url="http://localhost:8080":
 
 # Build backend Docker image with configurable port (default: 8080)
 be-prod port="8080":
-    cd backend && docker build --build-arg PORT={{port}} -t baydev/champion-league-be:latest .
+    cd backend && docker build --build-arg PORT={{port}} -t cy6erninja/champion-league-be:latest .
 
 # Run backend dev server with configurable port (default: 8080)
 be-dev port="8080":

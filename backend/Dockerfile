@@ -12,6 +12,10 @@ WORKDIR /app
 
 COPY . .
 
+# Allow Composer plugins as root (needed for Swagger annotations)
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Install dependencies and optimize autoloader
 RUN composer install --no-dev --optimize-autoloader
 
 ARG PORT=8080

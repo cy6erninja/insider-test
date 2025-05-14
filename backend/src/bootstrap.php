@@ -72,7 +72,7 @@ $routes->add('swagger_json', new Route('/swagger-json', [
         try {
             // Generate OpenAPI documentation from attributes
             $openapi = \OpenApi\Generator::scan([
-                __DIR__ . '/controllers'
+                __DIR__ . '/Controllers'
             ], [
                 'validate' => false
             ]);

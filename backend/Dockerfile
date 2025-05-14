@@ -18,6 +18,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Install PHP dependencies (production only) and optimize autoloader
 RUN composer install --no-dev --optimize-autoloader
 
+# Create and set permissions for session directory
+RUN mkdir -p /tmp/php-sessions && chmod 777 /tmp/php-sessions
+
 # Runtime configuration
 ARG PORT=8080
 ENV PORT=${PORT}
@@ -26,4 +29,5 @@ ENV ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
 
 EXPOSE ${PORT}
 
-CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t public"] 
+# Start PHP with proper session configuration
+CMD ["sh", "-c", "php -d session.save_path=/tmp/php-sessions -S 0.0.0.0:$PORT -t public"] 

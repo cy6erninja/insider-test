@@ -7,8 +7,6 @@ const LeagueTable: React.FC = () => {
   const { leagueTable, loadingTable } = state;
   const { playAll, reset, playAllMutation, resetMutation } = useLeagueActions();
 
-  // Height calculation: 4 teams + header + buttons area
-  // This ensures a consistent height
   return (
     <div
       className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 min-w-[260px] flex-1 flex flex-col"

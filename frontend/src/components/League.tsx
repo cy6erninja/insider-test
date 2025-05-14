@@ -5,7 +5,6 @@ import WinProbabilities from "./WinProbabilities";
 import { useLeagueData } from "../hooks";
 
 function League() {
-  // Use custom hook for data fetching
   useLeagueData();
 
   return (

@@ -1,12 +1,13 @@
 {
-  "name": "insider-champion-league",
+  "name": "insider-champion-league-fe",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.76.0",

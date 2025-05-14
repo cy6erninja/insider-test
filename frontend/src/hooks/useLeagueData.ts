@@ -1,15 +1,12 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   fetchLeagueTable,
   fetchWeekResults,
   fetchWeekPredictions,
   fetchTotalWeeks,
-  playNextWeek,
-  playAllWeeks,
-  resetLeague,
-} from "../services/leagueApi";
+} from "@/services/leagueApi";
 import React from "react";
-import { useLeague } from "../context/LeagueContext";
+import { useLeague } from "@/context/LeagueContext";
 
 /**
  * Hook for fetching league data and updating context
@@ -91,58 +88,3 @@ export const useLeagueData = () => {
     predictionsQuery,
   };
 };
-
-export const useLeagueActions = () => {
-  const { state, dispatch } = useLeague();
-  const { currentWeek } = state;
-  const queryClient = useQueryClient();
-
-  // Invalidate all relevant queries
-  const invalidateQueries = () => {
-    queryClient.invalidateQueries({ queryKey: ["leagueTable"] });
-    queryClient.invalidateQueries({ queryKey: ["weekResults"] });
-    queryClient.invalidateQueries({ queryKey: ["weekPredictions"] });
-    queryClient.invalidateQueries({ queryKey: ["totalWeeks"] });
-  };
-
-  // Play next week mutation
-  const playNextMutation = useMutation({
-    mutationFn: () => playNextWeek(currentWeek + 1),
-    onSuccess: () => {
-      const nextWeek = currentWeek + 1;
-      dispatch({ type: "SET_CURRENT_WEEK", payload: nextWeek });
-
-      // Invalidate queries for the new week
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["leagueTable"] });
-        queryClient.invalidateQueries({
-          queryKey: ["weekResults", nextWeek],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["weekPredictions", nextWeek],
-        });
-      }, 0);
-    },
-  });
-
-  // Play all weeks mutation
-  const playAllMutation = useMutation({
-    mutationFn: playAllWeeks,
-    onSuccess: invalidateQueries,
-  });
-
-  // Reset league mutation
-  const resetMutation = useMutation({
-    mutationFn: resetLeague,
-    onSuccess: invalidateQueries,
-  });
-
-  return {
-    playNext: () => playNextMutation.mutate(),
-    playAll: () => playAllMutation.mutate(),
-    reset: () => resetMutation.mutate(),
-    playNextMutation,
-    playAllMutation,
-    resetMutation,
-  };
-}; 

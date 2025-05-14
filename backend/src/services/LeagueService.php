@@ -58,9 +58,11 @@ class LeagueService
                 $awayTeamIndex = $this->findTeamIndexInTableById($table, $awayTeamId);
                 
                 if ($homeTeamIndex !== false && $awayTeamIndex !== false) {
+                    $homeRef = &$table[$homeTeamIndex];
+                    $awayRef = &$table[$awayTeamIndex];
                     $this->updateTeamStats(
-                        $table[$homeTeamIndex],
-                        $table[$awayTeamIndex],
+                        $homeRef,
+                        $awayRef,
                         $game->getHomeGoals(),
                         $game->getAwayGoals()
                     );

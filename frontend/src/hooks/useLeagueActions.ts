@@ -1,10 +1,10 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { useLeague } from "../context/LeagueContext";
 import {
   playNextWeek,
   playAllWeeks,
   resetLeague,
 } from "../services/leagueApi";
+import { useLeague } from "@/context/LeagueContext";
 
 /**
  * Hook for league actions and mutations

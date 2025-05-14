@@ -1,3 +1,5 @@
+import { MatchResult } from "../types/league";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8080";
 
 export const fetchLeagueTable = async () => {
@@ -14,6 +16,27 @@ export const fetchWeekResults = async (week: number) => {
   });
   if (!res.ok) throw new Error("Failed to fetch week results");
   return res.json();
+};
+
+export const fetchAllWeeksResults = async (totalWeeks: number) => {
+  const allWeeks: Record<number, MatchResult[]> = {};
+  
+  // Create an array of promises for all weeks
+  const promises = Array.from({ length: totalWeeks }, (_, i) => {
+    const week = i + 1;
+    return fetchWeekResults(week)
+      .then(data => {
+        allWeeks[week] = data.data;
+      })
+      .catch(error => {
+        console.error(`Failed to fetch week ${week}:`, error);
+      });
+  });
+  
+  // Execute all promises in parallel
+  await Promise.all(promises);
+  
+  return allWeeks;
 };
 
 export const fetchWeekPredictions = async (week: number) => {

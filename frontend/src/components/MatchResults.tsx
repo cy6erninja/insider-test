@@ -16,10 +16,9 @@ const MatchResults: React.FC = () => {
   const getStateTitle = () => {
     if (currentWeek === 0) {
       return "The league has not been started yet";
-    } else if (isLastWeekOrBeyond) {
-      return "The league has ended.";
     } else {
-      return `${currentWeek}ᵗʰ Week Match Result`;
+      // Just show the week number
+      return `${currentWeek}ᵗʰ Week`;
     }
   };
 

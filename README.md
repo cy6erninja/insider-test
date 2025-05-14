@@ -79,9 +79,4 @@ You can also manually trigger a deployment from the GitHub Actions tab.
   2. Select "Secrets and variables" → "Actions"
   3. Add a new repository secret named `BACKEND_URL` with your backend endpoint
 
-- **CORS Settings**: The backend accepts a comma-separated list of allowed origins via the `ALLOWED_ORIGINS` environment variable. By default, it allows:
-  - `http://localhost:3000` (local development)
-  - `https://localhost:3000` (local HTTPS)
-  - `https://sikachev.github.io` (GitHub Pages)
-  - `https://sikachev.github.io/insider-test` (GitHub Pages with repo name)
-  - You can set to `*` to allow all origins
+- **CORS Settings**: The backend accepts a comma-separated list of allowed origins via the `ALLOWED_ORIGINS` environment variable. 

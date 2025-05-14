@@ -1,8 +1,6 @@
 <?php
 // Bootstrap file for DI and routing
 
-session_start();
-
 $cookieDomain = getenv('SESSION_COOKIE_DOMAIN') ?: $_SERVER['HTTP_HOST'];
 
 // Set session cookie params for cross-site session support
@@ -14,6 +12,8 @@ session_set_cookie_params([
     'httponly' => true,
     'samesite' => 'None',
 ]);
+
+session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

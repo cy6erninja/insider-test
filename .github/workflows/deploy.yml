@@ -16,27 +16,6 @@ permissions:
   id-token: write
 
 jobs:
-  # backend-deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
-
-  #     - name: Log in to DigitalOcean Container Registry
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: ${{ secrets.DOCR_REGISTRY }}
-  #         username: ${{ secrets.DOCR_USERNAME }}
-  #         password: ${{ secrets.DOCR_PASSWORD }}
-
-  #     - name: Build and push Docker image
-  #       run: |
-  #         docker build -t ${{ secrets.DOCR_REGISTRY }}/${{ secrets.DOCR_REPOSITORY }}:latest ./backend
-  #         docker push ${{ secrets.DOCR_REGISTRY }}/${{ secrets.DOCR_REPOSITORY }}:latest
-
   frontend-deploy:
     runs-on: ubuntu-latest
     environment:

@@ -1,9 +1,13 @@
 name: Deploy Monorepo
 
 on:
+  # Runs on pushes targeting the main branch
   push:
     branches:
       - main
+
+  # Allows manual triggering from the Actions tab
+  workflow_dispatch:
 
 # Permissions needed for GitHub Pages deployment
 permissions:

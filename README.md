@@ -17,11 +17,11 @@ This monorepo contains a Next.js frontend and PHP backend for the Insider Champi
 # Start the frontend development server
 just fe-dev
 
-# With custom port
-just fe-dev port="4000"
+# With custom port (e.g., 4000)
+just fe-dev 4000
 
-# With custom backend URL
-just fe-dev backend-url="http://localhost:8080"
+# With custom port and backend URL
+just fe-dev 4000 http://localhost:8080
 ```
 
 ### Backend Development
@@ -33,11 +33,11 @@ cd backend && composer install
 # Start the backend development server
 just be-dev
 
-# With custom port
-just be-dev port="9000"
+# With custom port (e.g., 9000)
+just be-dev 9000
 
-# With custom CORS allowed origins
-just be-dev allowed-origins="http://localhost:3000,https://example.com"
+# With custom port and allowed origins
+just be-dev 9000 "http://localhost:4000,https://example.com"
 ```
 
 ### Production Builds
@@ -46,8 +46,17 @@ just be-dev allowed-origins="http://localhost:3000,https://example.com"
 # Build frontend for production
 just fe-prod
 
+# With custom backend URL
+just fe-prod http://localhost:8080
+
 # Build backend Docker image
 just be-prod
+
+# With custom port (e.g., 9090)
+just be-prod 9090
+
+# With custom port and allowed origins
+just be-prod 9090 "http://localhost:4000,https://example.com"
 
 # Run both production builds
 just all

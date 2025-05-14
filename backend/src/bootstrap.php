@@ -3,6 +3,18 @@
 
 session_start();
 
+$cookieDomain = getenv('SESSION_COOKIE_DOMAIN') ?: $_SERVER['HTTP_HOST'];
+
+// Set session cookie params for cross-site session support
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => $cookieDomain,
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'None',
+]);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

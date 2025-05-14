@@ -148,7 +148,8 @@ $allowed_origins = getenv('ALLOWED_ORIGINS') ?
         'http://localhost:3000',                       // Local development
         'https://localhost:3000',                      // Local development with HTTPS
         'https://cy6erninja.github.io',                  // GitHub Pages
-        'https://cy6erninja.github.io/insider-test'      // GitHub Pages with repo path
+        'https://cy6erninja.github.io/insider-test',      // GitHub Pages with repo path
+        '*'
     ];
 
 // Loop through all the allowed origins to find a match

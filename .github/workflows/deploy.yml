@@ -1,0 +1,54 @@
+name: Deploy Monorepo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # backend-deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+
+  #     - name: Log in to DigitalOcean Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ${{ secrets.DOCR_REGISTRY }}
+  #         username: ${{ secrets.DOCR_USERNAME }}
+  #         password: ${{ secrets.DOCR_PASSWORD }}
+
+  #     - name: Build and push Docker image
+  #       run: |
+  #         docker build -t ${{ secrets.DOCR_REGISTRY }}/${{ secrets.DOCR_REPOSITORY }}:latest ./backend
+  #         docker push ${{ secrets.DOCR_REGISTRY }}/${{ secrets.DOCR_REPOSITORY }}:latest
+
+  frontend-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: cd frontend && npm ci
+
+      - name: Build static site
+        run: cd frontend && npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

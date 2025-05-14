@@ -1,8 +1,8 @@
 FROM php:8.4-cli
 
-# Install system dependencies
+# Install minimal system dependencies for Composer
 RUN apt-get update && \
-    apt-get install -y git unzip zip && \
+    apt-get install -y unzip zip git && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Composer
@@ -15,21 +15,12 @@ COPY . .
 # Allow Composer plugins as root (needed for Swagger annotations)
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Install dependencies and optimize autoloader
+# Install PHP dependencies (production only) and optimize autoloader
 RUN composer install --no-dev --optimize-autoloader
 
-# Fix directory casing for PSR-4 autoloading compliance in case-sensitive environments
-RUN mv /app/src/Services /app/src/services && \
-    mv /app/src/Controllers /app/src/controllers && \
-    mv /app/src/Models /app/src/models
-
-# Regenerate autoloader after directory renaming
-RUN composer dump-autoload --optimize
-
+# Runtime configuration
 ARG PORT=8080
 ENV PORT=${PORT}
-
-# Add CORS configuration support
 ARG ALLOWED_ORIGINS="*"
 ENV ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
 

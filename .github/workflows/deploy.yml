@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+# Permissions needed for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   # backend-deploy:
   #   runs-on: ubuntu-latest
@@ -29,6 +35,9 @@ jobs:
 
   frontend-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

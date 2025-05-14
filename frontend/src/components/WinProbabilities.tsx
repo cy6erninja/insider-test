@@ -78,20 +78,6 @@ const WinProbabilities: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Add a manual refresh button when league has ended */}
-      {isLeagueEnded && (
-        <div className="mt-4 text-center">
-          <button
-            className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-            onClick={() =>
-              queryClient.invalidateQueries({ queryKey: ["weekPredictions"] })
-            }
-          >
-            Refresh probabilities
-          </button>
-        </div>
-      )}
     </div>
   );
 };

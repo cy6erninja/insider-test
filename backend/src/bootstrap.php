@@ -140,10 +140,32 @@ $matcher = new UrlMatcher($routes, $context);
 
 // Set CORS headers for all API responses
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowed_origin = 'http://localhost:3000'; // <-- set this to your frontend's URL
 
-if ($origin === $allowed_origin) {
-    header("Access-Control-Allow-Origin: $allowed_origin");
+// Get allowed origins from environment or use defaults
+$allowed_origins = getenv('ALLOWED_ORIGINS') ? 
+    explode(',', getenv('ALLOWED_ORIGINS')) : 
+    [
+        'http://localhost:3000',                       // Local development
+        'https://localhost:3000',                      // Local development with HTTPS
+        'https://cy6erninja.github.io',                  // GitHub Pages
+        'https://cy6erninja.github.io/insider-test'      // GitHub Pages with repo path
+    ];
+
+// Loop through all the allowed origins to find a match
+$origin_is_allowed = false;
+foreach ($allowed_origins as $allowed_origin) {
+    if ($origin === $allowed_origin || $allowed_origin === '*') {
+        $origin_is_allowed = true;
+        header("Access-Control-Allow-Origin: $origin");
+        break;
+    }
+}
+
+// If no specific origin matched but we want to allow any origin
+if (!$origin_is_allowed && in_array('*', $allowed_origins)) {
+    header('Access-Control-Allow-Origin: *');
+} elseif ($origin_is_allowed) {
+    // Additional CORS headers when origin is allowed
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Authorization');
